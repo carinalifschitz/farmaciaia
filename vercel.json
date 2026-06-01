@@ -6,14 +6,14 @@
       "use": "@vercel/static-build"
     },
     {
-      "src": "Backend/index.js", 
-      "use": "@vercel/node"
+      "src": "Backend/index.py",
+      "use": "@vercel/python"
     }
   ],
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "Backend/index.js"
+      "dest": "Backend/index.py"
     },
     {
       "src": "/(.*)",
