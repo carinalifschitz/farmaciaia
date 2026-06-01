@@ -30,16 +30,16 @@ export default function ValidacionReceta() {
     setResultado("");
 
     try {
-      const respuesta = await fetch("fetch('/api/validar')", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          receta: receta,
-          remedios: medicamentos,
-        }),
-      });
+     const respuesta = await fetch('/api/validar', {
+  	method: "POST",
+  	headers: {
+  	  "Content-Type": "application/json",
+  	},
+ 	 body: JSON.stringify({
+  	  receta: receta,
+  	  remedios: medicamentos,
+ 	 }),
+	});
 
       const datos = await respuesta.json();
       if (datos.resultado) {
