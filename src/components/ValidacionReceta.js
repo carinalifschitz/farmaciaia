@@ -89,7 +89,7 @@ export default function ValidacionReceta() {
             >
               Subir Receta
             </button>
-            <input type="file" accept="image/*" ref={recetaInputRef} onChange={handleRecetaUpload} className="hidden" />
+            <input type="file" accept="image/*" capture="environment"  ref={recetaInputRef} onChange={handleRecetaUpload} className="hidden" />
           </div>
         </div>
 
@@ -113,7 +113,7 @@ export default function ValidacionReceta() {
             >
               Subir Productos
             </button>
-            <input type="file" accept="image/*" ref={medicamentosInputRef} onChange={handleMedicamentosUpload} className="hidden" />
+            <input type="file" capture="environment"  accept="image/*" ref={medicamentosInputRef} onChange={handleMedicamentosUpload} className="hidden" />
           </div>
         </div>
 
