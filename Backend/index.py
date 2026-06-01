@@ -18,17 +18,23 @@ def analizar_correspondencia_medica(receta: str, remedios: str) -> str:
     Compara el texto de una receta médica con una lista de remedios a entregar
     utilizando Llama 3.3 en Groq mediante LangChain.
     """
-    # Configuración y carga segura del entorno local (.env)
+    # 1. Intentamos cargar el entorno local por si estamos en la computadora
     directorio_actual = os.path.dirname(os.path.abspath(__file__))
     ruta_env = os.path.join(directorio_actual, "entorno.env")
-    load_dotenv(dotenv_path=ruta_env)
+    if os.path.exists(ruta_env):
+        load_dotenv(dotenv_path=ruta_env)
+    else:
+        # Si no existe (como en Vercel), cargamos el load_dotenv genérico del sistema
+        load_dotenv()
 
+    # 2. Buscamos la API KEY (Vercel la inyecta directo acá)
     api_key = os.getenv("GROQ_API_KEY")
 
+    # Si sigue sin aparecer, devolvemos un mensaje que no rompa el JSON de React
     if not api_key:
-        return "❌ ERROR: No se encontró la variable GROQ_API_KEY en entorno.env"
+        return "❌ ERROR de configuración: La clave GROQ_API_KEY no está registrada en el sistema."
 
-    # Inicialización del modelo (Temperatura baja para máxima precisión médica)
+    # Inicialización del modelo
     llm = ChatGroq(
         model_name="llama-3.3-70b-versatile",
         temperature=0.1,  
@@ -78,7 +84,6 @@ def analizar_correspondencia_medica(receta: str, remedios: str) -> str:
         return respuesta.content
     except Exception as e:
         return f"❌ Error al procesar la solicitud con la IA: {str(e)}"
-
 
 # ==========================================================
 #  ENDPOINT API PARA CONECTAR CON EL FETCH DE REACT
