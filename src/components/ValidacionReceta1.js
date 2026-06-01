@@ -1,6 +1,5 @@
 import { useState, useRef } from "react";
 import { ShieldCheck, FileText, PackageCheck, Loader2 } from "lucide-react"; 
-// Importamos Tesseract para el procesamiento de imágenes real
 import Tesseract from "tesseract.js";
 
 export default function ValidacionReceta() {
@@ -8,61 +7,18 @@ export default function ValidacionReceta() {
   const [medicamentos, setMedicamentos] = useState("");
   const [resultado, setResultado] = useState(""); 
   const [cargando, setCargando] = useState(false); 
-  // Estados intermedios para mostrar el progreso del OCR al usuario
-  const [progresoReceta, setProgresoReceta] = useState("");
-  const [progresoMedicamentos, setProgresoMedicamentos] = useState("");
 
   const recetaInputRef = useRef(null);
   const medicamentosInputRef = useRef(null);
 
-  // Procesa la foto de la receta médica
   const handleRecetaUpload = (event) => {
     const file = event.target.files[0];
-    if (!file) return;
-
-    setProgresoReceta("Leyendo imagen... 0%");
-    const imageUrl = URL.createObjectURL(file);
-
-    Tesseract.recognize(imageUrl, 'spa', {
-      logger: (m) => {
-        if (m.status === 'recognizing text') {
-          setProgresoReceta(`Leyendo imagen... ${Math.round(m.progress * 100)}%`);
-        }
-      }
-    })
-    .then(({ data: { text } }) => {
-      setReceta(text);
-      setProgresoReceta("");
-    })
-    .catch((err) => {
-      console.error(err);
-      setProgresoReceta("❌ Error al escanear la receta");
-    });
+    if (file) setReceta(`Archivo cargado: ${file.name}\n[Simulación OCR: Paracetamol 500mg, 20 comprimidos]`);
   };
 
-  // Procesa la foto de las cajas de medicamentos entregadas
   const handleMedicamentosUpload = (event) => {
     const file = event.target.files[0];
-    if (!file) return;
-
-    setProgresoMedicamentos("Leyendo cajas... 0%");
-    const imageUrl = URL.createObjectURL(file);
-
-    Tesseract.recognize(imageUrl, 'spa', {
-      logger: (m) => {
-        if (m.status === 'recognizing text') {
-          setProgresoMedicamentos(`Leyendo cajas... ${Math.round(m.progress * 100)}%`);
-        }
-      }
-    })
-    .then(({ data: { text } }) => {
-      setMedicamentos(text);
-      setProgresoMedicamentos("");
-    })
-    .catch((err) => {
-      console.error(err);
-      setProgresoMedicamentos("❌ Error al escanear los productos");
-    });
+    if (file) setMedicamentos(`Archivo cargado: ${file.name}\n[Simulación Vision: Paracetamol 500mg, 10 comprimidos]`);
   };
 
   const manejarValidacionConIA = async () => {
@@ -75,16 +31,16 @@ export default function ValidacionReceta() {
     setResultado("");
 
     try {
-      const respuesta = await fetch('/api/validar', {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          receta: receta,
-          remedios: medicamentos,
-        }),
-      });
+     const respuesta = await fetch('/api/validar', {
+  	method: "POST",
+  	headers: {
+  	  "Content-Type": "application/json",
+  	},
+ 	 body: JSON.stringify({
+  	  receta: receta,
+  	  remedios: medicamentos,
+ 	 }),
+	});
 
       const datos = await respuesta.json();
       if (datos.resultado) {
@@ -127,15 +83,14 @@ export default function ValidacionReceta() {
             onChange={(e) => setReceta(e.target.value)}
             placeholder="Texto reconocido de la receta..."
           />
-          <div className="mt-3 flex items-center gap-3">
+          <div className="mt-3">
             <button
               onClick={() => recetaInputRef.current.click()}
               className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 rounded-xl transition shadow-sm text-sm"
             >
-              Fotografiar Receta
+              Subir Receta
             </button>
-            {progresoReceta && <span className="text-xs text-blue-600 font-medium">{progresoReceta}</span>}
-            <input type="file" accept="image/*" capture="environment" ref={recetaInputRef} onChange={handleRecetaUpload} className="hidden" />
+            <input type="file" accept="image/*" capture="environment"  ref={recetaInputRef} onChange={handleRecetaUpload} className="hidden" />
           </div>
         </div>
 
@@ -152,15 +107,14 @@ export default function ValidacionReceta() {
             onChange={(e) => setMedicamentos(e.target.value)}
             placeholder="Texto reconocido de los productos..."
           />
-          <div className="mt-3 flex items-center gap-3">
+          <div className="mt-3">
             <button
               onClick={() => medicamentosInputRef.current.click()}
               className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-1.5 rounded-xl transition shadow-sm text-sm"
             >
-              Fotografiar Productos
+              Subir Productos
             </button>
-            {progresoMedicamentos && <span className="text-xs text-emerald-600 font-medium">{progresoMedicamentos}</span>}
-            <input type="file" accept="image/*" capture="environment" ref={medicamentosInputRef} onChange={handleMedicamentosUpload} className="hidden" />
+            <input type="file" capture="environment"  accept="image/*" ref={medicamentosInputRef} onChange={handleMedicamentosUpload} className="hidden" />
           </div>
         </div>
 
