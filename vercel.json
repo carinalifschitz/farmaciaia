@@ -6,21 +6,18 @@
       "use": "@vercel/static-build"
     },
     {
-      "src": "Backend/app.py",
+      "src": "Backend/index.py",
       "use": "@vercel/python"
     }
   ],
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "Backend/app.py"
-    },
-    {
-      "handle": "filesystem"
+      "dest": "Backend/index.py"
     },
     {
       "src": "/(.*)",
-      "dest": "/index.html"
+      "dest": "/$1"
     }
   ]
 }
