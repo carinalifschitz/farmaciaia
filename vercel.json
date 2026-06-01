@@ -6,7 +6,7 @@
       "use": "@vercel/static-build"
     },
     {
-      "src": "app.py",
+      "src": "Backend/app.py",
       "use": "@vercel/python"
     }
   ],
@@ -16,8 +16,11 @@
       "dest": "Backend/app.py"
     },
     {
+      "handle": "filesystem"
+    },
+    {
       "src": "/(.*)",
-      "dest": "/"
+      "dest": "/index.html"
     }
   ]
 }
