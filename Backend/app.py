@@ -11,7 +11,7 @@ from langchain_groq import ChatGroq
 warnings.filterwarnings("ignore")
 
 app = Flask(__name__)
-CORS(app)  # Habilita CORS para que React pueda consultar esta API sin bloqueos
+CORS(app, resources={r"/api/*": {"origins": "*"}}) # Habilita CORS para que React pueda consultar esta API sin bloqueos
 
 def analizar_correspondencia_medica(receta: str, remedios: str) -> str:
     """
